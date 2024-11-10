@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary color -->
+    <color name="primary">#4CAF50</color> <!-- Green 500 -->
+    <color name="primary_variant">#388E3C</color> <!-- Green 700 -->
+    <color name="on_primary">#FFFFFF</color> <!-- White -->
+
+    <!-- Secondary color -->
+    <color name="secondary">#FF9800</color> <!-- Orange 500 -->
+    <color name="secondary_variant">#FFB74D</color> <!-- Orange 300 -->
+    <color name="on_secondary">#000000</color> <!-- Black -->
+
+    <!-- Background colors -->
+    <color name="background">#FAFAFA</color> <!-- Grey 50 -->
+    <color name="on_background">#000000</color> <!-- Black -->
+
+    <!-- Surface colors -->
+    <color name="surface">#FFFFFF</color> <!-- White -->
+    <color name="on_surface">#000000</color> <!-- Black -->
+
+    <!-- Error colors -->
+    <color name="error">#B71C1C</color> <!-- Red 900 -->
+    <color name="on_error">#FFFFFF</color> <!-- White -->
+
+    <!-- Colors for active sound item and timer -->
+    <color name="sound_item_active">#E8F5E9</color> <!-- Light Green -->
+    <color name="timer_text">#FF5722</color> <!-- Red A700 -->
+    <color name="on_timer_text">#FFFFFF</color> <!-- White -->
+
+    <!-- Dark theme colors -->
+    <color name="primary_dark">#81C784</color> <!-- Green 300 -->
+    <color name="primary_variant_dark">#4CAF50</color> <!-- Green 500 -->
+    <color name="on_primary_dark">#000000</color> <!-- Black -->
+
+    <color name="secondary_dark">#FFCC80</color> <!-- Orange 200 -->
+    <color name="secondary_variant_dark">#FF9800</color> <!-- Orange 500 -->
+    <color name="on_secondary_dark">#000000</color> <!-- Black -->
+
+    <color name="background_dark">#212121</color> <!-- Grey 900 -->
+    <color name="on_background_dark">#FFFFFF</color> <!-- White -->
+
+    <color name="surface_dark">#333333</color> <!-- Grey 850 -->
+    <color name="on_surface_dark">#FFFFFF</color> <!-- White -->
+
+    <color name="error_dark">#E57373</color> <!-- Red 300 -->
+    <color name="on_error_dark">#000000</color> <!-- Black -->
+
+    <!-- Colors for dark theme active sound item and timer -->
+    <color name="sound_item_active_dark">#2E7D32</color> <!-- Darker Green for Dark Mode -->
+    <color name="timer_text_dark">#FF8A65</color> <!-- Light Red for Timer Text in Dark Mode -->
+
+    <!-- Widget-specific colors -->
+    <color name="widget_background">#FFFFFF</color> <!-- White background for widgets -->
+    <color name="widget_background_dark">#333333</color> <!-- Dark background for widgets -->
+    <color name="widget_text">#000000</color> <!-- Black text for widgets -->
+    <color name="widget_text_dark">#FFFFFF</color> <!-- White text for widgets -->
+</resources>

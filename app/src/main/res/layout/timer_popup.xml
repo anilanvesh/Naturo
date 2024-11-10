@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    tools:ignore="MissingPrefix"
+    tools:targetApi="34">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:maxWidth="488dp">
+
+        <!-- Title for setting the timer -->
+        <TextView
+            android:id="@+id/textViewTimerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_timer"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="34"/>
+
+        <!-- Input layout for minutes with a hint -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutMinutes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/enter_minutes"
+            android:maxWidth="488dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewTimerTitle"
+            tools:targetApi="34">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextMinutes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLines="1"
+                android:maxWidth="488dp"
+                android:hint="@string/enter_minutes"
+                android:importantForAccessibility="yes"
+                tools:targetApi="34"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- TextView to show the valid timer range -->
+        <TextView
+            android:id="@+id/textViewTimerRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/timer_range"
+            android:textSize="12sp"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutMinutes"
+            tools:targetApi="34"/>
+
+        <!-- Button to set the timer -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSetTimer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="4dp"
+            android:maxWidth="320dp"
+            android:text="@string/set"
+            android:textColor="@android:color/white"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="4dp"
+            app:layout_constraintWidth_max="320dp"
+            app:layout_constraintEnd_toStartOf="@id/buttonCancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewTimerRange"
+            tools:targetApi="34"/>
+
+        <!-- Button to cancel setting the timer -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:maxWidth="320dp"
+            android:text="@string/cancel"
+            android:textColor="@android:color/white"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="4dp"
+            app:layout_constraintWidth_max="320dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/buttonSetTimer"
+            app:layout_constraintTop_toTopOf="@id/buttonSetTimer"
+            tools:targetApi="34"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

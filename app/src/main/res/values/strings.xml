@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Naturo</string>
+
+    <!-- Main Activity -->
+    <string name="play_pause">Play/Pause</string>
+    <string name="clear">Clear</string>
+    <string name="set_timer">Set Timer</string>
+    <string name="dark_mode">Dark Mode</string>
+
+    <!-- Sound Item -->
+    <string name="sound_icon">Sound Icon</string>
+    <string name="play_pause_indicator">Play/Pause Indicator</string>
+    <string name="volume_control">Volume Control</string> <!-- Added for volume control label -->
+
+    <!-- Timer Popup -->
+    <string name="enter_minutes">Enter minutes</string>
+    <string name="timer_range">Range: %1$d–%2$d minutes</string> <!-- Dynamic range using Constants -->
+    <string name="timer_out_of_range">Please enter a value between %1$d and %2$d minutes.</string> <!-- Added error message -->
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
+    <string name="time_remaining">Time Remaining</string> <!-- Added for timer display -->
+
+    <!-- Sound Names -->
+    <string name="bamboo">Bamboo</string>
+    <string name="birds">Birds</string>
+    <string name="campfire">Campfire</string>
+    <string name="chimes">Chimes</string>
+    <string name="clock_ticking">Clock Ticking</string>
+    <string name="flute">Flute</string>
+    <string name="frogs">Frogs</string>
+    <string name="insects">Insects</string>
+    <string name="keyboard">Keyboard</string>
+    <string name="light_rain">Light Rain</string>
+    <string name="river_stream">River Stream</string>
+    <string name="singing_bowl">Singing Bowl</string>
+    <string name="thunder">Thunder</string>
+    <string name="water_drops">Water Drops</string>
+    <string name="waves">Waves</string>
+
+    <!-- Accessibility -->
+    <string name="desc_play_sound">Play sound</string> <!-- Added for accessibility -->
+    <string name="desc_adjust_volume">Adjust volume</string> <!-- Added for accessibility -->
+    <string name="desc_master_volume">Master volume control</string> <!-- Added for accessibility -->
+
+    <!-- Error Messages -->
+    <string name="error_sound_load">Failed to load sound</string>
+    <string name="error_playback">Playback error occurred</string>
+    <string name="error_volume_control">Failed to adjust volume</string>
+    <string name="error_timer">Timer operation failed</string>
+    <string name="error_dark_mode">Failed to switch dark mode</string>
+    <string name="error_unknown">An unknown error occurred</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Naturo Sound Service</string>
+    <string name="notification_channel_description">Controls for ongoing sound playback</string>
+    <string name="notification_title">Naturo is playing</string>
+    <string name="notification_text">Tap to open app</string>
+
+    <!-- Widget.Naturo specific labels -->
+    <string name="widget_volume_adjust">Adjust widget volume</string>
+    <string name="widget_playback_toggle">Toggle playback on widget</string>
+    <string name="widget_notification_title">Naturo Widget</string>
+    <string name="widget_notification_text">Manage sounds from widget</string>
+    <string name="widget_volume_label">Widget Volume</string>
+</resources>
