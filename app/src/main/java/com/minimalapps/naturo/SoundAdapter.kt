@@ -14,7 +14,7 @@ class SoundAdapter(
     private val soundPlayer: SoundPlayer,
     private val volumeControl: VolumeControl,
     private val screenWidthDp: Int,
-    private val onSoundStateChanged: ((Int) -> Unit)? = null
+    private val onSoundStateChanged: ((Int, Boolean) -> Unit)? = null
 ) : RecyclerView.Adapter<SoundAdapter.SoundViewHolder>() {
 
     val sounds = listOf(
@@ -34,6 +34,9 @@ class SoundAdapter(
         SoundItem(R.drawable.ic_water_drops, R.string.water_drops, Constants.WATER_DROPS_SOUND),
         SoundItem(R.drawable.ic_waves, R.string.waves, Constants.WAVES_SOUND)
     )
+
+    // Track active sounds
+    private val activeSounds = mutableSetOf<Int>()
 
     private val handler = Handler(Looper.getMainLooper())
     private var stopRunnable: Runnable? = null
@@ -105,47 +108,58 @@ class SoundAdapter(
         }
 
         private fun updateSoundState(soundItem: SoundItem) {
-            val isCurrentlyPlaying = soundPlayer.isSoundPlaying(soundItem.soundId)
+            val isCurrentlyPlaying = activeSounds.contains(soundItem.soundId)
             volumeSeekBar.visibility = if (isCurrentlyPlaying) View.VISIBLE else View.GONE
         }
 
         private fun toggleSound(soundItem: SoundItem) {
-            if (soundPlayer.isSoundPlaying(soundItem.soundId)) {
+            if (activeSounds.contains(soundItem.soundId)) {
                 // Stop sound
                 soundPlayer.stopSound(soundItem.soundId)
+                activeSounds.remove(soundItem.soundId)
                 volumeSeekBar.visibility = View.GONE
-                onSoundStateChanged?.invoke(soundItem.soundId)
+                onSoundStateChanged?.invoke(soundItem.soundId, false)
             } else {
                 // Play sound
                 soundPlayer.playSound(soundItem.soundId)
+                activeSounds.add(soundItem.soundId)
                 volumeSeekBar.visibility = View.VISIBLE
-                onSoundStateChanged?.invoke(soundItem.soundId)
+                onSoundStateChanged?.invoke(soundItem.soundId, true)
             }
+            notifyItemChanged(sounds.indexOf(soundItem))
         }
     }
 
+    // Get list of currently active sound IDs
+    fun getActiveSoundIds(): List<Int> = activeSounds.toList()
+
+    // Check if any sounds are currently active
+    fun hasActiveSounds(): Boolean = activeSounds.isNotEmpty()
+
     fun playAllSounds() {
-        val activeSounds = soundPlayer.getActiveSounds()
         sounds.forEachIndexed { index, soundItem ->
             if (!activeSounds.contains(soundItem.soundId)) {
                 soundPlayer.playSound(soundItem.soundId)
+                activeSounds.add(soundItem.soundId)
                 notifyItemChanged(index)
-                onSoundStateChanged?.invoke(soundItem.soundId)
+                onSoundStateChanged?.invoke(soundItem.soundId, true)
             }
         }
     }
 
     fun pauseAllSounds() {
-        val activeSounds = soundPlayer.getActiveSounds()
-        activeSounds.forEach { soundId ->
+        val currentActiveSounds = activeSounds.toList()
+        currentActiveSounds.forEach { soundId ->
             val index = sounds.indexOfFirst { it.soundId == soundId }
             if (index != -1) {
                 soundPlayer.stopSound(soundId)
+                activeSounds.remove(soundId)
                 notifyItemChanged(index)
-                onSoundStateChanged?.invoke(soundId)
+                onSoundStateChanged?.invoke(soundId, false)
             }
         }
     }
+
     fun resetAllSoundVolumes() {
         sounds.forEach { soundItem ->
             volumeControl.setSoundClipVolume(soundItem.soundId, 0.5f)
@@ -153,13 +167,14 @@ class SoundAdapter(
     }
 
     fun clearAllSounds() {
-        val activeSounds = soundPlayer.getActiveSounds()
-        activeSounds.forEach { soundId ->
+        val currentActiveSounds = activeSounds.toList()
+        currentActiveSounds.forEach { soundId ->
             val index = sounds.indexOfFirst { it.soundId == soundId }
             if (index != -1) {
                 soundPlayer.stopSound(soundId)
+                activeSounds.remove(soundId)
                 notifyItemChanged(index)
-                onSoundStateChanged?.invoke(soundId)
+                onSoundStateChanged?.invoke(soundId, false)
             }
         }
     }

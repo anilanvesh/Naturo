@@ -10,6 +10,9 @@ class SoundPlayer(private val context: Context) {
     // Map to store active MediaPlayers for each sound
     private val activePlayers = mutableMapOf<Int, MediaPlayer>()
 
+    // Set to keep track of sounds that were active before pausing
+    private val previouslyActiveSounds = mutableSetOf<Int>()
+
     // Map to store individual sound volumes (0.0 to 1.0)
     private val individualVolumes = mutableMapOf<Int, Float>().apply {
         // Initialize default volumes for all sounds
@@ -49,6 +52,7 @@ class SoundPlayer(private val context: Context) {
         // Stop the sound if it's already playing
         if (activePlayers.containsKey(soundId)) {
             stopSound(soundId)
+            return
         }
 
         try {
@@ -116,14 +120,35 @@ class SoundPlayer(private val context: Context) {
 
     // Pause all active sounds
     fun pauseAllSounds() {
+        // Store currently active sounds before pausing
+        previouslyActiveSounds.clear()
+        previouslyActiveSounds.addAll(activePlayers.keys)
+
         activePlayers.values.forEach { it.pause() }
         Log.d("SoundPlayer", "Paused all sounds: ${activePlayers.size}")
     }
 
-    // Resume all active sounds
+    // Resume all previously active sounds
     fun playAllSounds() {
-        activePlayers.values.forEach { it.start() }
-        Log.d("SoundPlayer", "Resumed all sounds: ${activePlayers.size}")
+        // Play sounds that were active before pausing
+        previouslyActiveSounds.forEach { soundId ->
+            if (!activePlayers.containsKey(soundId)) {
+                playSound(soundId)
+            } else {
+                activePlayers[soundId]?.start()
+            }
+        }
+        Log.d("SoundPlayer", "Resumed previously active sounds: ${previouslyActiveSounds.size}")
+    }
+
+    // Get list of previously active sounds
+    fun getPreviouslyActiveSounds(): List<Int> {
+        return previouslyActiveSounds.toList()
+    }
+
+    // Check if there were previously active sounds
+    fun hasPreviouslyActiveSounds(): Boolean {
+        return previouslyActiveSounds.isNotEmpty()
     }
 
     // Private method for internal sound clearing
@@ -133,6 +158,7 @@ class SoundPlayer(private val context: Context) {
             player.release()
         }
         activePlayers.clear()
+        previouslyActiveSounds.clear()
         Log.d("SoundPlayer", "Cleared all sounds")
     }
 

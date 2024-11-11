@@ -64,14 +64,9 @@ class MainActivity : AppCompatActivity() {
             soundPlayer,
             volumeControl,
             screenWidthDp
-        ) { soundId ->
-            // Find the position of the sound and update just that item
-            val position = soundAdapter.sounds.indexOfFirst { it.soundId == soundId }
-            if (position != -1) {
-                runOnUiThread {
-                    soundAdapter.notifyItemChanged(position)
-                }
-            }
+        ) { soundId, isPlaying ->
+            // Update play/pause button state based on active sounds
+            updatePlayPauseButtonState()
         }
         recyclerViewSounds.adapter = soundAdapter
 
@@ -87,6 +82,17 @@ class MainActivity : AppCompatActivity() {
         darkModeManager = DarkModeManager(PreferencesManager(this))
         audioFocusManager = AudioFocusManager(this)
         timerPopup = TimerPopup(this)
+    }
+
+    // Update play/pause button state based on active sounds
+    private fun updatePlayPauseButtonState() {
+        runOnUiThread {
+            if (soundAdapter.hasActiveSounds()) {
+                buttonPlayPause.setImageResource(R.drawable.ic_pause)
+            } else {
+                buttonPlayPause.setImageResource(R.drawable.ic_play)
+            }
+        }
     }
 
     // Responsive grid layout configuration
@@ -128,26 +134,41 @@ class MainActivity : AppCompatActivity() {
         // Play/Pause button listener - Only for active sounds
         buttonPlayPause.setOnClickListener {
             try {
-                val activeSounds = soundPlayer.getActiveSounds()
-
-                if (activeSounds.isNotEmpty()) {
+                if (soundAdapter.hasActiveSounds()) {
                     // Pause active sounds
-                    soundAdapter.pauseAllSounds()
-                    buttonPlayPause.setImageResource(R.drawable.ic_play)
-                    audioFocusManager.abandonAudioFocus()
-                    Log.d("MainActivity", "Paused active sounds")
+                    val focusGranted = audioFocusManager.requestAudioFocus { focusChange ->
+                        when (focusChange) {
+                            AudioManager.AUDIOFOCUS_LOSS -> {
+                                soundAdapter.pauseAllSounds()
+                                updatePlayPauseButtonState()
+                                Log.d("MainActivity", "Lost audio focus, paused sounds")
+                            }
+                            AudioManager.AUDIOFOCUS_GAIN -> {
+                                soundAdapter.playAllSounds()
+                                updatePlayPauseButtonState()
+                                Log.d("MainActivity", "Regained audio focus, resumed sounds")
+                            }
+                        }
+                    }
+
+                    if (focusGranted) {
+                        soundAdapter.pauseAllSounds()
+                        updatePlayPauseButtonState()
+                        audioFocusManager.abandonAudioFocus()
+                        Log.d("MainActivity", "Paused active sounds")
+                    }
                 } else {
                     // Play sounds
                     val focusGranted = audioFocusManager.requestAudioFocus { focusChange ->
                         when (focusChange) {
                             AudioManager.AUDIOFOCUS_LOSS -> {
                                 soundAdapter.pauseAllSounds()
-                                buttonPlayPause.setImageResource(R.drawable.ic_play)
+                                updatePlayPauseButtonState()
                                 Log.d("MainActivity", "Lost audio focus, paused sounds")
                             }
                             AudioManager.AUDIOFOCUS_GAIN -> {
                                 soundAdapter.playAllSounds()
-                                buttonPlayPause.setImageResource(R.drawable.ic_pause)
+                                updatePlayPauseButtonState()
                                 Log.d("MainActivity", "Regained audio focus, resumed sounds")
                             }
                         }
@@ -155,7 +176,7 @@ class MainActivity : AppCompatActivity() {
 
                     if (focusGranted) {
                         soundAdapter.playAllSounds()
-                        buttonPlayPause.setImageResource(R.drawable.ic_pause)
+                        updatePlayPauseButtonState()
                         Log.d("MainActivity", "Played active sounds")
                     }
                 }
@@ -170,7 +191,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 soundAdapter.clearAllSounds()
                 soundAdapter.resetAllSoundVolumes()
-                buttonPlayPause.setImageResource(R.drawable.ic_play)
+                updatePlayPauseButtonState()
                 audioFocusManager.abandonAudioFocus()
                 textViewTimer.visibility = TextView.GONE
                 Log.d("MainActivity", "Cleared all sounds")
