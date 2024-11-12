@@ -17,6 +17,7 @@ class SoundAdapter(
     private val onSoundStateChanged: ((Int, Boolean) -> Unit)? = null
 ) : RecyclerView.Adapter<SoundAdapter.SoundViewHolder>() {
 
+    // List of all available sound items
     val sounds = listOf(
         SoundItem(R.drawable.ic_bamboo, R.string.bamboo, Constants.BAMBOO_SOUND),
         SoundItem(R.drawable.ic_birds, R.string.birds, Constants.BIRDS_SOUND),
@@ -35,39 +36,45 @@ class SoundAdapter(
         SoundItem(R.drawable.ic_waves, R.string.waves, Constants.WAVES_SOUND)
     )
 
-    // Track active sounds
-    private val activeSounds = mutableSetOf<Int>()
+    // Track active sounds with their play state (playing or paused)
+    private val activeSounds = mutableMapOf<Int, Boolean>()
 
+    // Handler for managing delayed actions
     private val handler = Handler(Looper.getMainLooper())
     private var stopRunnable: Runnable? = null
 
-    // Responsive icon and text sizing
+    // Calculate responsive icon and text sizes based on screen width
     private val iconSize = calculateIconSize()
     private val textSize = calculateTextSize()
 
+    // Create a new ViewHolder when needed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SoundViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.sound_item, parent, false)
         return SoundViewHolder(view)
     }
 
+    // Bind data to the ViewHolder
     override fun onBindViewHolder(holder: SoundViewHolder, position: Int) {
         val soundItem = sounds[position]
         holder.bind(soundItem)
     }
 
+    // Total number of sound items
     override fun getItemCount(): Int = sounds.size
 
+    // Inner class to manage individual sound item view
     inner class SoundViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val soundIcon: ImageView = view.findViewById(R.id.imageViewSoundIcon)
         private val soundName: TextView = view.findViewById(R.id.textViewSoundName)
         private val volumeSeekBar: SeekBar = view.findViewById(R.id.seekBarVolume)
         private var soundItem: SoundItem? = null
 
+        // Initialize view interactions
         init {
-            // Set initial volume seek bar to hidden
+            // Hide volume seek bar initially
             volumeSeekBar.visibility = View.GONE
 
-            // Direct sound icon click to toggle sound
+            // Add click listener to sound icon
             soundIcon.setOnClickListener {
                 soundItem?.let { item ->
                     toggleSound(item)
@@ -75,23 +82,25 @@ class SoundAdapter(
             }
         }
 
+        // Bind sound item details to the view
         fun bind(soundItem: SoundItem) {
             this.soundItem = soundItem
 
-            // Set responsive icon and text
+            // Set responsive icon size
             val layoutParams = soundIcon.layoutParams
             layoutParams.width = iconSize
             layoutParams.height = iconSize
             soundIcon.layoutParams = layoutParams
             soundIcon.setImageResource(soundItem.iconResId)
 
+            // Set text size and content
             soundName.textSize = textSize
             soundName.setText(soundItem.nameResId)
 
-            // Update UI based on current sound state
+            // Update sound state (playing/paused)
             updateSoundState(soundItem)
 
-            // Volume control setup
+            // Setup volume control
             val currentVolume = volumeControl.getSoundClipVolume(soundItem.soundId)
             volumeSeekBar.progress = (currentVolume * 100).toInt()
             volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -107,22 +116,25 @@ class SoundAdapter(
             })
         }
 
+        // Update UI based on sound state
         private fun updateSoundState(soundItem: SoundItem) {
-            val isCurrentlyPlaying = activeSounds.contains(soundItem.soundId)
+            val isCurrentlyPlaying = activeSounds[soundItem.soundId] == true
             volumeSeekBar.visibility = if (isCurrentlyPlaying) View.VISIBLE else View.GONE
         }
 
+        // Toggle sound between play and pause
         private fun toggleSound(soundItem: SoundItem) {
-            if (activeSounds.contains(soundItem.soundId)) {
-                // Stop sound
-                soundPlayer.stopSound(soundItem.soundId)
-                activeSounds.remove(soundItem.soundId)
+            val currentState = activeSounds[soundItem.soundId]
+            if (currentState == true) {
+                // Pause sound
+                soundPlayer.pauseSound(soundItem.soundId)
+                activeSounds[soundItem.soundId] = false
                 volumeSeekBar.visibility = View.GONE
                 onSoundStateChanged?.invoke(soundItem.soundId, false)
             } else {
                 // Play sound
                 soundPlayer.playSound(soundItem.soundId)
-                activeSounds.add(soundItem.soundId)
+                activeSounds[soundItem.soundId] = true
                 volumeSeekBar.visibility = View.VISIBLE
                 onSoundStateChanged?.invoke(soundItem.soundId, true)
             }
@@ -131,43 +143,50 @@ class SoundAdapter(
     }
 
     // Get list of currently active sound IDs
-    fun getActiveSoundIds(): List<Int> = activeSounds.toList()
+    fun getActiveSoundIds(): List<Int> = activeSounds.keys.toList()
 
-    // Check if any sounds are currently active
-    fun hasActiveSounds(): Boolean = activeSounds.isNotEmpty()
+    // Check if any sounds are currently playing
+    fun hasActiveSounds(): Boolean = activeSounds.values.contains(true)
 
+    // Resume all paused sounds
     fun playAllSounds() {
-        sounds.forEachIndexed { index, soundItem ->
-            if (!activeSounds.contains(soundItem.soundId)) {
-                soundPlayer.playSound(soundItem.soundId)
-                activeSounds.add(soundItem.soundId)
-                notifyItemChanged(index)
-                onSoundStateChanged?.invoke(soundItem.soundId, true)
+        activeSounds.forEach { (soundId, isPlaying) ->
+            if (!isPlaying) {
+                val index = sounds.indexOfFirst { it.soundId == soundId }
+                if (index != -1) {
+                    soundPlayer.playSound(soundId)
+                    activeSounds[soundId] = true
+                    notifyItemChanged(index)
+                    onSoundStateChanged?.invoke(soundId, true)
+                }
             }
         }
     }
 
+    // Pause all playing sounds
     fun pauseAllSounds() {
-        val currentActiveSounds = activeSounds.toList()
+        val currentActiveSounds = activeSounds.keys.toList()
         currentActiveSounds.forEach { soundId ->
             val index = sounds.indexOfFirst { it.soundId == soundId }
             if (index != -1) {
-                soundPlayer.stopSound(soundId)
-                activeSounds.remove(soundId)
+                soundPlayer.pauseSound(soundId)
+                activeSounds[soundId] = false
                 notifyItemChanged(index)
                 onSoundStateChanged?.invoke(soundId, false)
             }
         }
     }
 
+    // Reset volume for all sounds to default
     fun resetAllSoundVolumes() {
         sounds.forEach { soundItem ->
             volumeControl.setSoundClipVolume(soundItem.soundId, 0.5f)
         }
     }
 
+    // Stop and clear all sounds
     fun clearAllSounds() {
-        val currentActiveSounds = activeSounds.toList()
+        val currentActiveSounds = activeSounds.keys.toList()
         currentActiveSounds.forEach { soundId ->
             val index = sounds.indexOfFirst { it.soundId == soundId }
             if (index != -1) {
@@ -179,23 +198,25 @@ class SoundAdapter(
         }
     }
 
-    // Responsive sizing methods
+    // Calculate responsive icon size based on screen width
     private fun calculateIconSize(): Int {
         return when {
-            screenWidthDp < 600 -> 144  // 3x original size
-            screenWidthDp < 900 -> 192
-            else -> 240
+            screenWidthDp < 600 -> 144  // Small screens
+            screenWidthDp < 900 -> 192  // Medium screens
+            else -> 240  // Large screens
         }
     }
 
+    // Calculate responsive text size based on screen width
     private fun calculateTextSize(): Float {
         return when {
-            screenWidthDp < 600 -> 10f
-            screenWidthDp < 900 -> 12f
-            else -> 14f
+            screenWidthDp < 600 -> 10f  // Small screens
+            screenWidthDp < 900 -> 12f  // Medium screens
+            else -> 14f  // Large screens
         }
     }
 
+    // Start a timer to stop sounds after a specified duration
     fun startTimerForSounds(duration: Long) {
         stopRunnable?.let { handler.removeCallbacks(it) }
         stopRunnable = Runnable {
@@ -205,4 +226,5 @@ class SoundAdapter(
     }
 }
 
+// Data class to represent a sound item
 data class SoundItem(val iconResId: Int, val nameResId: Int, val soundId: Int)

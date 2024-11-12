@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var audioFocusManager: AudioFocusManager
     private lateinit var recyclerViewSounds: RecyclerView
     private lateinit var textViewTimer: TextView
+    private var countDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,6 +191,9 @@ class MainActivity : AppCompatActivity() {
         // Clear button listener
         buttonClear.setOnClickListener {
             try {
+                // Cancel any existing timer
+                countDownTimer?.cancel()
+
                 soundAdapter.clearAllSounds()
                 soundAdapter.resetAllSoundVolumes()
                 updatePlayPauseButtonState()
@@ -206,10 +211,42 @@ class MainActivity : AppCompatActivity() {
             try {
                 timerPopup.show()
                 timerPopup.setOnTimerSetListener { minutes ->
-                    textViewTimer.text = String.format(Locale.getDefault(), "%02d:%02d", minutes / 60, minutes % 60)
-                    textViewTimer.visibility = TextView.VISIBLE
-                    soundAdapter.startTimerForSounds(minutes * 60 * 1000L)
+                    // Cancel any existing timer
+                    countDownTimer?.cancel()
+
+                    // Convert minutes to milliseconds
+                    val timerDurationMillis = minutes * 60 * 1000L
+
+                    // Create and start new CountDownTimer
+                    countDownTimer = object : CountDownTimer(timerDurationMillis, 1000) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            val remainingMinutes = millisUntilFinished / (60 * 1000)
+                            val remainingSeconds = (millisUntilFinished % (60 * 1000)) / 1000
+                            textViewTimer.text = String.format(
+                                Locale.getDefault(),
+                                "%02d:%02d",
+                                remainingMinutes,
+                                remainingSeconds
+                            )
+                            textViewTimer.visibility = TextView.VISIBLE
+                        }
+
+                        override fun onFinish() {
+                            textViewTimer.visibility = TextView.GONE
+                            soundAdapter.clearAllSounds()
+                            soundAdapter.resetAllSoundVolumes()
+                            updatePlayPauseButtonState()
+                        }
+                    }.start()
+
+                    // Start timer for sounds
+                    soundAdapter.startTimerForSounds(timerDurationMillis)
                     Log.d("MainActivity", "Timer set for $minutes minutes")
+                }
+
+                // Optional: Add a cancel listener
+                timerPopup.setOnTimerCancelListener {
+                    Log.d("MainActivity", "Timer setup cancelled")
                 }
             } catch (e: Exception) {
                 errorHandler.showError(Constants.ERROR_TIMER)
@@ -231,6 +268,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // Cancel the countdown timer to prevent memory leaks
+        countDownTimer?.cancel()
         soundPlayer.release()
         audioFocusManager.abandonAudioFocus()
         Log.d("MainActivity", "Activity destroyed, resources released")

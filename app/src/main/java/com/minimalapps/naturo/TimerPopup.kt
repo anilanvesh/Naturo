@@ -12,6 +12,7 @@ import android.widget.Toast
 class TimerPopup(private val context: Context) {
 
     private var onTimerSetListener: ((Int) -> Unit)? = null
+    private var onTimerCancelListener: (() -> Unit)? = null
 
     fun show() {
         val dialogView: View = LayoutInflater.from(context).inflate(R.layout.timer_popup, null)
@@ -19,6 +20,9 @@ class TimerPopup(private val context: Context) {
         val textViewTimerRange = dialogView.findViewById<TextView>(R.id.textViewTimerRange)
         val buttonSetTimer = dialogView.findViewById<Button>(R.id.buttonSetTimer)
         val buttonCancel = dialogView.findViewById<Button>(R.id.buttonCancel)
+
+        // Remove duplicate hint by setting only one hint
+        editTextMinutes.hint = context.getString(R.string.enter_minutes)
 
         // Set the timer range text with formatted values
         textViewTimerRange.text = context.getString(R.string.timer_range, Constants.TIMER_MIN_LIMIT, Constants.TIMER_MAX_LIMIT)
@@ -50,6 +54,7 @@ class TimerPopup(private val context: Context) {
         }
 
         buttonCancel.setOnClickListener {
+            onTimerCancelListener?.invoke()
             alertDialog.dismiss()
         }
 
@@ -58,5 +63,9 @@ class TimerPopup(private val context: Context) {
 
     fun setOnTimerSetListener(listener: (Int) -> Unit) {
         this.onTimerSetListener = listener
+    }
+
+    fun setOnTimerCancelListener(listener: () -> Unit) {
+        this.onTimerCancelListener = listener
     }
 }

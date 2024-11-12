@@ -10,8 +10,8 @@ class SoundPlayer(private val context: Context) {
     // Map to store active MediaPlayers for each sound
     private val activePlayers = mutableMapOf<Int, MediaPlayer>()
 
-    // Set to keep track of sounds that were active before pausing
-    private val previouslyActiveSounds = mutableSetOf<Int>()
+    // Map to track the state of sounds (playing or paused)
+    private val soundStates = mutableMapOf<Int, Boolean>()
 
     // Map to store individual sound volumes (0.0 to 1.0)
     private val individualVolumes = mutableMapOf<Int, Float>().apply {
@@ -39,28 +39,43 @@ class SoundPlayer(private val context: Context) {
 
     // Check if a specific sound is currently playing
     fun isSoundPlaying(soundId: Int): Boolean {
-        return activePlayers.containsKey(soundId)
+        return soundStates[soundId] == true
     }
 
     // Get list of currently active sounds
     fun getActiveSounds(): List<Int> {
-        return activePlayers.keys.toList()
+        return soundStates.filter { it.value }.keys.toList()
     }
 
     // Play a sound based on its ID
     fun playSound(soundId: Int) {
-        // Stop the sound if it's already playing
-        if (activePlayers.containsKey(soundId)) {
-            stopSound(soundId)
-            return
-        }
+        // If sound is already playing, do nothing
+        if (soundStates[soundId] == true) return
 
         try {
-            val mediaPlayer = createMediaPlayer(soundId)
-            activePlayers[soundId] = mediaPlayer
+            // If MediaPlayer doesn't exist, create a new one
+            if (!activePlayers.containsKey(soundId)) {
+                val mediaPlayer = createMediaPlayer(soundId)
+                activePlayers[soundId] = mediaPlayer
+            } else {
+                // If MediaPlayer exists but was paused, resume it
+                activePlayers[soundId]?.start()
+            }
+
+            // Update sound state to playing
+            soundStates[soundId] = true
             Log.d("SoundPlayer", "Playing sound: $soundId")
         } catch (e: Exception) {
             Log.e("SoundPlayer", "Error playing sound $soundId", e)
+        }
+    }
+
+    // Pause a specific sound
+    fun pauseSound(soundId: Int) {
+        activePlayers[soundId]?.let { player ->
+            player.pause()
+            soundStates[soundId] = false
+            Log.d("SoundPlayer", "Paused sound: $soundId")
         }
     }
 
@@ -80,8 +95,9 @@ class SoundPlayer(private val context: Context) {
             val volume = individualVolumes[soundId] ?: 0.5f
             setVolume(volume, volume)
 
-            // Add completion listener to remove from active players
+            // Add completion listener to handle sound completion
             setOnCompletionListener {
+                soundStates.remove(soundId)
                 activePlayers.remove(soundId)
             }
 
@@ -114,57 +130,49 @@ class SoundPlayer(private val context: Context) {
             player.stop()
             player.release()
             activePlayers.remove(soundId)
+            soundStates.remove(soundId)
             Log.d("SoundPlayer", "Stopped sound: $soundId")
         }
     }
 
     // Pause all active sounds
     fun pauseAllSounds() {
-        // Store currently active sounds before pausing
-        previouslyActiveSounds.clear()
-        previouslyActiveSounds.addAll(activePlayers.keys)
-
-        activePlayers.values.forEach { it.pause() }
-        Log.d("SoundPlayer", "Paused all sounds: ${activePlayers.size}")
+        // Pause all currently playing sounds
+        val currentPlayingSounds = soundStates.filter { it.value }.keys.toList()
+        currentPlayingSounds.forEach { soundId ->
+            pauseSound(soundId)
+        }
+        Log.d("SoundPlayer", "Paused all sounds: ${currentPlayingSounds.size}")
     }
 
-    // Resume all previously active sounds
+    // Resume all previously paused sounds
     fun playAllSounds() {
-        // Play sounds that were active before pausing
-        previouslyActiveSounds.forEach { soundId ->
-            if (!activePlayers.containsKey(soundId)) {
-                playSound(soundId)
-            } else {
-                activePlayers[soundId]?.start()
-            }
+        // Play sounds that were previously paused
+        val pausedSounds = soundStates.filter { !it.value }.keys.toList()
+        pausedSounds.forEach { soundId ->
+            playSound(soundId)
         }
-        Log.d("SoundPlayer", "Resumed previously active sounds: ${previouslyActiveSounds.size}")
+        Log.d("SoundPlayer", "Resumed previously paused sounds: ${pausedSounds.size}")
     }
 
     // Get list of previously active sounds
     fun getPreviouslyActiveSounds(): List<Int> {
-        return previouslyActiveSounds.toList()
+        return soundStates.filter { !it.value }.keys.toList()
     }
 
     // Check if there were previously active sounds
     fun hasPreviouslyActiveSounds(): Boolean {
-        return previouslyActiveSounds.isNotEmpty()
+        return soundStates.any { !it.value }
     }
 
-    // Private method for internal sound clearing
-    private fun clearAllSounds() {
+    // Release all media players
+    fun release() {
         activePlayers.values.forEach { player ->
             player.stop()
             player.release()
         }
         activePlayers.clear()
-        previouslyActiveSounds.clear()
-        Log.d("SoundPlayer", "Cleared all sounds")
-    }
-
-    // Release all media players
-    fun release() {
-        clearAllSounds()
+        soundStates.clear()
         Log.d("SoundPlayer", "Released all resources")
     }
 
@@ -190,12 +198,12 @@ class SoundPlayer(private val context: Context) {
         }
     }
 
-    // Optional: Reset volume for a specific sound
+    // Reset volume for a specific sound
     fun resetVolume(soundId: Int) {
         setIndividualSoundVolume(soundId, 0.5f)
     }
 
-    // Optional: Reset volumes for all active sounds
+    // Reset volumes for all active sounds
     fun resetAllVolumes() {
         getActiveSounds().forEach { soundId ->
             setIndividualSoundVolume(soundId, 0.5f)
