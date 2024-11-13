@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Custom attributes for styling components -->
+    <attr name="controlIconColor" format="color" />
+    <attr name="soundGridBackground" format="color" />
+    <attr name="soundItemBackground" format="color" />
+    <attr name="timerTextColor" format="color" />
+    <attr name="timerTextColorOnBackground" format="color" />
+
     <!-- Base application theme -->
     <style name="Theme.Naturo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color -->
@@ -26,30 +33,33 @@
         <item name="android:textColorPrimary">@color/on_surface</item>
         <item name="android:textColorSecondary">@color/on_background</item>
 
+        <!-- Custom theme attributes -->
+        <item name="controlIconColor">@color/control_icon_light</item>
+        <item name="soundGridBackground">@color/sound_grid_background_light</item>
+        <item name="soundItemBackground">@color/sound_item_active</item>
+        <item name="timerTextColor">@color/timer_text</item>
+        <item name="timerTextColorOnBackground">@color/on_timer_text</item>
+
         <!-- Widget styles -->
         <item name="buttonStyle">@style/Widget.Naturo.Button</item>
         <item name="switchStyle">@style/Widget.Naturo.Switch</item>
         <item name="cardViewStyle">@style/Widget.Naturo.Card</item>
-
-        <!-- Custom attributes -->
-        <item name="soundItemBackground">@color/sound_item_active</item>
-        <item name="timerTextColor">@color/timer_text</item>
     </style>
 
     <!-- Dark theme -->
     <style name="Theme.Naturo.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color -->
-        <item name="colorPrimary">@color/primary_variant</item>
-        <item name="colorPrimaryVariant">@color/primary</item>
-        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorPrimaryVariant">@color/primary_variant_dark</item>
+        <item name="colorOnPrimary">@color/on_primary_dark</item>
 
         <!-- Secondary brand color -->
-        <item name="colorSecondary">@color/secondary_variant</item>
-        <item name="colorSecondaryVariant">@color/secondary</item>
-        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondary">@color/secondary_dark</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant_dark</item>
+        <item name="colorOnSecondary">@color/on_secondary_dark</item>
 
         <!-- Status bar color -->
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
         <!-- Background colors -->
         <item name="android:windowBackground">@color/background_dark</item>
@@ -62,17 +72,16 @@
         <item name="android:textColorPrimary">@color/on_surface_dark</item>
         <item name="android:textColorSecondary">@color/on_background_dark</item>
 
+        <!-- Custom theme attributes -->
+        <item name="controlIconColor">@color/control_icon_dark</item>
+        <item name="soundGridBackground">@color/sound_grid_background_dark</item>
+        <item name="soundItemBackground">@color/sound_item_active_dark</item>
+        <item name="timerTextColor">@color/timer_text_dark</item>
+        <item name="timerTextColorOnBackground">@color/on_timer_text_dark</item>
+
         <!-- Widget styles -->
         <item name="buttonStyle">@style/Widget.Naturo.Button</item>
         <item name="switchStyle">@style/Widget.Naturo.Switch</item>
         <item name="cardViewStyle">@style/Widget.Naturo.Card</item>
-
-        <!-- Custom attributes -->
-        <item name="soundItemBackground">@color/sound_item_active_dark</item>
-        <item name="timerTextColor">@color/timer_text_dark</item>
     </style>
-
-    <!-- Custom attributes for styling components like SoundItem background and Timer text color -->
-    <attr name="soundItemBackground" format="color" />
-    <attr name="timerTextColor" format="color" />
 </resources>

@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="4dp"
+        app:cardBackgroundColor="?attr/soundItemBackground"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
         app:layout_constraintDimensionRatio="1:1"
@@ -22,6 +23,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?attr/soundItemBackground"
             android:padding="8dp">
 
             <!-- Responsive Sound Icon (Increased size) -->
@@ -40,6 +42,7 @@
                 app:layout_constraintBottom_toTopOf="@id/textViewSoundName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:tint="?attr/controlIconColor"
                 tools:src="@drawable/ic_birds"
                 tools:targetApi="34"/>
 
@@ -54,6 +57,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textStyle="bold"
+                android:textColor="?attr/android:textColorPrimary"
                 app:layout_constraintBottom_toTopOf="@id/seekBarVolume"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

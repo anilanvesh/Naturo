@@ -81,7 +81,13 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize error handler, dark mode manager, and audio focus manager
         errorHandler = ErrorHandler(this)
-        darkModeManager = DarkModeManager(PreferencesManager(this))
+
+        // Create PreferencesManager first
+        val preferencesManager = PreferencesManager(this)
+
+        // Then pass both preferencesManager and context to DarkModeManager
+        darkModeManager = DarkModeManager(preferencesManager, this)
+
         audioFocusManager = AudioFocusManager(this)
         timerPopup = TimerPopup(this)
     }
