@@ -8,7 +8,6 @@
     <string name="play_pause">Play/Pause</string>
     <string name="clear">Clear</string>
     <string name="set_timer">Set Timer</string>
-    <string name="dark_mode">Dark Mode</string>
     <string name="welcome_message">Welcome to Naturo, your personal sound sanctuary</string>
 
     <!-- Sound Item -->
@@ -47,14 +46,12 @@
     <string name="desc_play_sound">Play or pause sound</string>
     <string name="desc_adjust_volume">Adjust sound volume</string>
     <string name="desc_master_volume">Master volume control</string>
-    <string name="desc_dark_mode_toggle">Toggle between light and dark mode</string>
 
     <!-- Error Messages -->
     <string name="error_sound_load">Unable to load sound. Please try again.</string>
     <string name="error_playback">Playback interrupted. Reconnecting…</string>
     <string name="error_volume_control">Volume adjustment failed</string>
     <string name="error_timer">Timer setup unsuccessful</string>
-    <string name="error_dark_mode">Theme switch failed</string>
     <string name="error_unknown">An unexpected error occurred</string>
     <string name="error_network">Network connection required</string>
 
@@ -70,6 +67,7 @@
     <string name="notification_text">Tap to return to app</string>
     <string name="notification_timer_active">Timer active: %1$s remaining</string>
     <string name="settings">Settings</string>
+
     <!-- Widget Specific Labels -->
     <string name="widget_volume_adjust">Adjust widget volume</string>
     <string name="widget_playback_toggle">Toggle playback</string>

@@ -9,17 +9,13 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.switchmaterial.SwitchMaterial
-import kotlinx.coroutines.launch
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var soundAdapter: SoundAdapter
-    private lateinit var switchDarkMode: SwitchMaterial
     private lateinit var buttonPlayPause: ImageButton
     private lateinit var buttonClear: ImageButton
     private lateinit var buttonTimer: ImageButton
@@ -27,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var volumeControl: VolumeControl
     private lateinit var timerPopup: TimerPopup
     private lateinit var errorHandler: ErrorHandler
-    private lateinit var darkModeManager: DarkModeManager
     private lateinit var audioFocusManager: AudioFocusManager
     private lateinit var recyclerViewSounds: RecyclerView
     private lateinit var textViewTimer: TextView
@@ -40,10 +35,6 @@ class MainActivity : AppCompatActivity() {
         initUI()
         setupListeners()
 
-        // Apply saved dark mode setting in a coroutine
-        lifecycleScope.launch {
-            darkModeManager.applyDarkMode()
-        }
 
         // Start sound service for background sound support
         startService(Intent(this, SoundService::class.java))
@@ -76,17 +67,10 @@ class MainActivity : AppCompatActivity() {
         buttonPlayPause = findViewById(R.id.buttonPlayPause)
         buttonClear = findViewById(R.id.buttonClear)
         buttonTimer = findViewById(R.id.buttonTimer)
-        switchDarkMode = findViewById(R.id.switchDarkMode)
         textViewTimer = findViewById(R.id.textViewTimer)
 
         // Initialize error handler, dark mode manager, and audio focus manager
         errorHandler = ErrorHandler(this)
-
-        // Create PreferencesManager first
-        val preferencesManager = PreferencesManager(this)
-
-        // Then pass both preferencesManager and context to DarkModeManager
-        darkModeManager = DarkModeManager(preferencesManager, this)
 
         audioFocusManager = AudioFocusManager(this)
         timerPopup = TimerPopup(this)
@@ -260,16 +244,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Dark mode toggle listener
-        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            try {
-                darkModeManager.setDarkMode(isChecked)
-                Log.d("MainActivity", "Dark mode set to: $isChecked")
-            } catch (e: Exception) {
-                errorHandler.showError(Constants.ERROR_DARK_MODE)
-                Log.e("MainActivity", "Error changing dark mode", e)
-            }
-        }
+
     }
 
     override fun onDestroy() {

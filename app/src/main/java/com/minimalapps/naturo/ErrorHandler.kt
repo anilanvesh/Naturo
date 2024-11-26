@@ -20,7 +20,6 @@ class ErrorHandler(private val context: Context) {
                 Constants.ERROR_PLAYBACK -> R.string.error_playback
                 Constants.ERROR_VOLUME_CONTROL -> R.string.error_volume_control
                 Constants.ERROR_TIMER -> R.string.error_timer
-                Constants.ERROR_DARK_MODE -> R.string.error_dark_mode
                 else -> R.string.error_unknown
             }
         )

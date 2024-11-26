@@ -28,7 +28,6 @@ class Constants {
         const val ERROR_PLAYBACK = 1002
         const val ERROR_VOLUME_CONTROL = 1003
         const val ERROR_TIMER = 1004
-        const val ERROR_DARK_MODE = 1005
 
         // Timer limits
         const val TIMER_MIN_LIMIT = 1  // Minimum timer duration (in minutes)

@@ -8,7 +8,7 @@
     <attr name="timerTextColorOnBackground" format="color" />
 
     <!-- Base application theme -->
-    <style name="Theme.Naturo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Naturo" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
@@ -39,45 +39,6 @@
         <item name="soundItemBackground">@color/sound_item_active</item>
         <item name="timerTextColor">@color/timer_text</item>
         <item name="timerTextColorOnBackground">@color/on_timer_text</item>
-
-        <!-- Widget styles -->
-        <item name="buttonStyle">@style/Widget.Naturo.Button</item>
-        <item name="switchStyle">@style/Widget.Naturo.Switch</item>
-        <item name="cardViewStyle">@style/Widget.Naturo.Card</item>
-    </style>
-
-    <!-- Dark theme -->
-    <style name="Theme.Naturo.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color -->
-        <item name="colorPrimary">@color/primary_dark</item>
-        <item name="colorPrimaryVariant">@color/primary_variant_dark</item>
-        <item name="colorOnPrimary">@color/on_primary_dark</item>
-
-        <!-- Secondary brand color -->
-        <item name="colorSecondary">@color/secondary_dark</item>
-        <item name="colorSecondaryVariant">@color/secondary_variant_dark</item>
-        <item name="colorOnSecondary">@color/on_secondary_dark</item>
-
-        <!-- Status bar color -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-
-        <!-- Background colors -->
-        <item name="android:windowBackground">@color/background_dark</item>
-        <item name="colorSurface">@color/surface_dark</item>
-        <item name="colorOnSurface">@color/on_surface_dark</item>
-        <item name="colorError">@color/error_dark</item>
-        <item name="colorOnError">@color/on_error_dark</item>
-
-        <!-- Text colors -->
-        <item name="android:textColorPrimary">@color/on_surface_dark</item>
-        <item name="android:textColorSecondary">@color/on_background_dark</item>
-
-        <!-- Custom theme attributes -->
-        <item name="controlIconColor">@color/control_icon_dark</item>
-        <item name="soundGridBackground">@color/sound_grid_background_dark</item>
-        <item name="soundItemBackground">@color/sound_item_active_dark</item>
-        <item name="timerTextColor">@color/timer_text_dark</item>
-        <item name="timerTextColorOnBackground">@color/on_timer_text_dark</item>
 
         <!-- Widget styles -->
         <item name="buttonStyle">@style/Widget.Naturo.Button</item>

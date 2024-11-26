@@ -28,18 +28,6 @@
         tools:listitem="@layout/sound_item"
         tools:spanCount="3" />
 
-    <!-- Dark mode switch -->
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switchDarkMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="@string/dark_mode"
-        app:layout_constraintBottom_toTopOf="@id/linearLayoutControls"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewTimer"
-        app:useMaterialThemeColors="true" />
-
     <!-- Timer display -->
     <TextView
         android:id="@+id/textViewTimer"
