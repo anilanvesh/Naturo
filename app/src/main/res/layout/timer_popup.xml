@@ -42,6 +42,9 @@
             android:hint="@string/enter_minutes"
             android:maxWidth="488dp"
             app:hintTextColor="#808080"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            app:hintAnimationEnabled="true"
+            app:boxBackgroundColor="#F5F5F5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewTimerTitle"
@@ -55,7 +58,7 @@
                 android:maxLines="1"
                 android:maxWidth="488dp"
                 android:textColor="#000000"
-                android:hint="@string/enter_minutes"
+                android:background="@null"
                 android:importantForAccessibility="yes"
                 tools:targetApi="34"/>
 
