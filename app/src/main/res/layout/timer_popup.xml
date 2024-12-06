@@ -39,11 +39,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="@string/enter_minutes"
             android:maxWidth="488dp"
             app:hintTextColor="#808080"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            app:hintAnimationEnabled="true"
+            app:hintEnabled="false"
             app:boxBackgroundColor="#F5F5F5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,6 +58,7 @@
                 android:maxWidth="488dp"
                 android:textColor="#000000"
                 android:background="@null"
+                android:hint="@string/enter_minutes"
                 android:importantForAccessibility="yes"
                 tools:targetApi="34"/>
 
