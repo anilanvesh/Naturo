@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Locale
+import com.minimalapps.naturo.utils.GridUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         initUI()
         setupListeners()
-
 
         // Start sound service for background sound support
         startService(Intent(this, SoundService::class.java))
@@ -71,7 +71,6 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize error handler, dark mode manager, and audio focus manager
         errorHandler = ErrorHandler(this)
-
         audioFocusManager = AudioFocusManager(this)
         timerPopup = TimerPopup(this)
     }
@@ -87,33 +86,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Responsive grid layout configuration
+    // Responsive grid layout configuration using GridUtils
     private fun setupRecyclerViewLayout() {
-        val spanCount = calculateSpanCount()
+        val spanCount = GridUtils.calculateOptimalSpanCount(this)
         val layoutManager = GridLayoutManager(this, spanCount)
         recyclerViewSounds.layoutManager = layoutManager
-    }
-
-    // Dynamic span count based on screen size and orientation
-    private fun calculateSpanCount(): Int {
-        val configuration = resources.configuration
-        val screenWidthDp = configuration.screenWidthDp
-        val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
-        return when {
-            // Landscape orientation
-            isLandscape -> when {
-                screenWidthDp < 600 -> 4
-                screenWidthDp < 900 -> 5
-                else -> 6
-            }
-            // Portrait orientation
-            else -> when {
-                screenWidthDp < 600 -> 3
-                screenWidthDp < 900 -> 4
-                else -> 5
-            }
-        }
     }
 
     // Configuration change listener for responsive layout
@@ -243,8 +220,6 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Error setting timer", e)
             }
         }
-
-
     }
 
     override fun onDestroy() {
