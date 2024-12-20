@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.minimalapps.naturo"
+    namespace = "com.minimalisticapps.naturo"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.minimalapps.naturo"
+        applicationId = "com.minimalisticapps.naturo"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1

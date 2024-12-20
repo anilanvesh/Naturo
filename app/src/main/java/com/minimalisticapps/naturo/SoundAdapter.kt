@@ -1,4 +1,4 @@
-package com.minimalapps.naturo
+package com.minimalisticapps.naturo
 
 import android.os.Handler
 import android.os.Looper

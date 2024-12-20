@@ -1,4 +1,4 @@
-package com.minimalapps.naturo
+package com.minimalisticapps.naturo
 
 class Constants {
     companion object {

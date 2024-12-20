@@ -33,14 +33,11 @@
         android:layout_marginTop="8dp"
         android:background="?attr/soundGridBackground"
         android:clipToPadding="false"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/textViewTimer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageViewLogo"
-        app:spanCount="3"
-        tools:listitem="@layout/sound_item"
-        tools:spanCount="3" />
+        tools:listitem="@layout/sound_item" />
 
     <!-- Timer display -->
     <TextView
